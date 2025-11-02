@@ -35,5 +35,5 @@ jobs:
             touch traefik/acme.json
             chmod 600 traefik/acme.json
 
-            docker-compose pull
-            docker-compose up -d
+            docker compose pull
+            docker compose up -d

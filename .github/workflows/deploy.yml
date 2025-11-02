@@ -20,17 +20,17 @@ jobs:
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            if [ ! -d "/opt/infrastructure/.git" ]; then
-              echo "Repository not found, cloning..."
-              rm -rf /opt/infrastructure/*
-              git clone https://github.com/${{ github.repository }} /opt/infrastructure
-            else
-              echo "Repository exists, updating..."
+            if [ -d "/opt/infrastructure/.git" ]; then
+              echo "Updating existing repository..."
               cd /opt/infrastructure
-              git pull origin main
+              git fetch origin
+              git reset --hard origin/main
+            else
+              echo "Cloning repository..."
+              rm -rf /opt/infrastructure
+              git clone https://github.com/${{ github.repository }} /opt/infrastructure
+              cd /opt/infrastructure
             fi
-
-            cd /opt/infrastructure
 
             cat > .env << EOF
             DOMAIN=${{ secrets.DOMAIN }}
